@@ -45,7 +45,7 @@ public_users.get('/isbn/:isbn', function (req, res) {
   getBookByIsbn
     .then((book) => res.status(200).send(JSON.stringify(book, null, 4)))
     .catch((err) => res.status(404).json({message: err}));
- });
+});
   
 // Task 12: Get book details based on author using Promises
 public_users.get('/author/:author', function (req, res) {
@@ -79,7 +79,7 @@ public_users.get('/title/:title', function (req, res) {
   getBooksByTitle.then((booksList) => res.status(200).send(JSON.stringify({booksbytitle: booksList}, null, 4)));
 });
 
-//  Get book review
+// Get book review
 public_users.get('/review/:isbn', function (req, res) {
   const isbn = req.params.isbn;
   if (books[isbn]) {
