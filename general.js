@@ -5,63 +5,76 @@ const axios = require('axios');
 
 // Task 10
 public_users.get('/', async function (req, res) {
-  try {
-    const response = await axios.get('http://localhost:5000/');
-    return res.status(200).json(response.data);
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving books" });
-  }
+    const getBooks = new Promise((resolve, reject) => {
+        resolve(books);
+    });
+
+    getBooks.then((data) => {
+        res.send(JSON.stringify(data, null, 4));
+    });
 });
 
-// Task 11 - ISBN
+// Task 11
 public_users.get('/isbn/:isbn', async function (req, res) {
-  try {
     const isbn = req.params.isbn;
 
-    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    const getBook = new Promise((resolve, reject) => {
+        if (books[isbn]) {
+            resolve(books[isbn]);
+        } else {
+            reject("Book not found");
+        }
+    });
 
-    return res.status(200).json(response.data);
-  } catch (error) {
-    return res.status(404).json({ message: "Book not found" });
-  }
+    getBook
+        .then((book) => {
+            res.send(JSON.stringify(book, null, 4));
+        })
+        .catch((err) => {
+            res.status(404).json({ message: err });
+        });
 });
 
-// Task 12 - Author
+// Task 12
 public_users.get('/author/:author', async function (req, res) {
-  try {
     const author = req.params.author;
 
-    let filtered_books = {};
+    const getBooksByAuthor = new Promise((resolve, reject) => {
+        let filtered_books = {};
 
-    Object.keys(books).forEach(key => {
-      if (books[key].author === author) {
-        filtered_books[key] = books[key];
-      }
+        Object.keys(books).forEach((key) => {
+            if (books[key].author === author) {
+                filtered_books[key] = books[key];
+            }
+        });
+
+        resolve(filtered_books);
     });
 
-    return res.status(200).json(filtered_books);
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving books" });
-  }
+    getBooksByAuthor.then((data) => {
+        res.send(JSON.stringify(data, null, 4));
+    });
 });
 
-// Task 13 - Title
+// Task 13
 public_users.get('/title/:title', async function (req, res) {
-  try {
     const title = req.params.title;
 
-    let filtered_books = {};
+    const getBooksByTitle = new Promise((resolve, reject) => {
+        let filtered_books = {};
 
-    Object.keys(books).forEach(key => {
-      if (books[key].title === title) {
-        filtered_books[key] = books[key];
-      }
+        Object.keys(books).forEach((key) => {
+            if (books[key].title === title) {
+                filtered_books[key] = books[key];
+            }
+        });
+
+        resolve(filtered_books);
     });
 
-    return res.status(200).json(filtered_books);
-  } catch (error) {
-    return res.status(500).json({ message: "Error retrieving books" });
-  }
+    getBooksByTitle.then((data) => {
+        res.send(JSON.stringify(data, null, 4));
+    });
 });
 
 module.exports = public_users;
